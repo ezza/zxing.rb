@@ -47,6 +47,18 @@ module ZXing
         []
       end
 
+      def self.decode_objects!(file)
+        new(file).decode_objects
+      rescue NativeException
+        raise UndecodableError
+      end
+
+      def self.decode_objects(file)
+        decode_objects!(file)
+      rescue UndecodableError
+        []
+      end
+
       def initialize(file)
         self.file = file
       end
@@ -65,6 +77,14 @@ module ZXing
         multi_barcode_reader.decode_multiple(bitmap).map do |result|
           result.get_text
         end
+      end
+
+      def decode_objects
+        multi_barcode_reader = GenericMultipleBarcodeReader.new(reader)
+
+        decoding = multi_barcode_reader.decode_multiple(bitmap)
+
+        ZXing::Decoded.create_from decoding
       end
 
       private

@@ -1,5 +1,6 @@
 require 'zxing/version'
 require 'zxing/decoder'
+require 'zxing/decoded'
 
 module ZXing
   class UndecodableError < StandardError
@@ -71,6 +72,41 @@ module ZXing
   #
   def self.decode_all!(file)
     Decoder.decode_all! normalize(file)
+  end
+
+  ##
+  # Decodes barcodes from an image file, and returns an array of decode
+  # objects containing encoded value and location information.
+  #
+  # +file+ should be the path to the image file to decode, as a string.
+  #
+  # Example:
+  #
+  #   path = "path/to/file.png"
+  #   ZXing.decode_all(path) #=> 
+  #    [#<ZXing::Decoded:0x007fa836bf2da0 @text="example" (...) >]
+  #
+  # When the image cannot be decoded, +decode_objects+ returns +nil+:
+  #
+  #   path = "./no_encoded_image.png"
+  #   ZXing.decode_all(path) #=> nil
+  #
+  def self.decode_objects(file)
+    Decoder.decode_objects normalize(file)
+  end
+
+  ##
+  # Same as +decode_objects+, but raises an exception when image cannot be decoded.
+  #
+  # +file+ should be the path to the image file to decode, as a string.
+  #
+  # Example:
+  #
+  #   path = "./no_encoded_image.png"
+  #   ZXing.decode(path) #=> ZXing::UndecodableError
+  #
+  def self.decode_objects!(file)
+    Decoder.decode_objects! normalize(file)
   end
 
   private
