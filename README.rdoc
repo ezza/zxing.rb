@@ -31,6 +31,22 @@ decodes a plethora of barcodes. Their site has a complete list.
     # encoded with the value "test456":
     ZXing.decode_all 'image_with_multiple_barcodes.png' #=> ["test456", "test123"]
 
+    # ZXing#decode_objects returns an array of objects with encoded values and 
+    # location co-ordinates of found barcodes. For example
+    ZXing.decode_all 'image_with_single_barcode.png' #=>
+    [#<ZXing::Decoded:0x007fa836bf2da0
+       @result_metadata=nil,
+       @text="example",
+       @points=[
+         #<ZXing::DecodedPoint:0x007fa836bf2bc0 @string="(7.5,21.5)", @y=21.5, @x=7.5>,
+         #<ZXing::DecodedPoint:0x007fa836bf2a58 @string="(7.5,7.5)", @y=7.5, @x=7.5>,
+         #<ZXing::DecodedPoint:0x007fa836bf2968 @string="(21.5,7.5)", @y=7.5, @x=21.5>
+        ]
+    >]
+    # You can easily access a summary of point information from ZXing::Decoded
+    ZXing.decode_all('image_with_single_barcode.png').first.point_coordinates #=>
+    [[7.5,21.5], [7.5,7.5], [21.5,7.5]])}
+
     # You can also decode a URL...
     ZXing.decode 'http://2d-code.co.uk/images/bbc-logo-in-qr-code.gif'
 
